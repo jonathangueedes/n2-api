@@ -38,6 +38,7 @@ if (ambiente === 'development'){
 // A cada require, o js é inicializado
 api.use('/api/users', require('./controllers/api/users.controller'));
 api.use('/api/perguntas', require('./controllers/api/perguntas.controller'));
+api.use('/api/estoque', require('./controllers/api/estoque.controller'));
 
 // start server API
 var serverAPI = api.listen(apiPort, function () {
