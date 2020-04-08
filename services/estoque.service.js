@@ -79,11 +79,11 @@ function create(produtoParam) {
                 // username already exists
                 deferred.reject('Código do produto "' + produtoParam.codigoItem + '" já cadastrado');
             } else {
-                createPergunta();
+                createProduto();
             }
         });
 
-    function createPergunta() {
+    function createProduto() {
         // set user object to produtoParam without the cleartext password
         var user = _.omit(produtoParam, 'password');
 
@@ -110,17 +110,23 @@ function update(_id, produtoParam) {
         if (err) deferred.reject(err.name + ': ' + err.message);
 
         else {
-            updatePergunta();
+            updateProduto();
         }
     });
 
-    function updatePergunta() {
+    function updateProduto() {
         // fields to update
         var set = {
-            firstName: produtoParam.firstName,
-            lastName: produtoParam.lastName,
-            username: produtoParam.username,
-            idade : produtoParam.idade
+            codigoItem:  produtoParam.codigoItem,
+            dataEntrada:  produtoParam.dataEntrada,
+            tipo:  produtoParam.tipo,
+            marca:  produtoParam.marca,
+            caracteristica:  produtoParam.caracteristica,
+            tamanho:  produtoParam.tamanho,
+            cor:  produtoParam.cor,
+            valorCompra:  produtoParam.valorCompra,
+            valorMargem:  produtoParam.valorMargem,
+            precoSugerido:  produtoParam.precoSugerido        
         };
 
     

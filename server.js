@@ -11,7 +11,7 @@ var bodyParser = require('body-parser');
 // essa biblioteca será utilizada na API para fazer autenticaçao seguindo o método JWT. 
 // Se quiser estudar um pouco mais sobre JWT, pesquise aqui
 // https://jwt.io/introduction/
-//var expressJwt = require('express-jwt');
+var expressJwt = require('express-jwt');
 // carrega as configurações mapeadas no json
 var config = require('config.json');
 // agora escutando em uma porta diferente a api.
@@ -20,7 +20,7 @@ var ambiente = process.env.NODE_ENV || 'development';
 
 // separação da api
 // uso do JWT para garantir a segurança da API e o uso de json no body para transferir dados de uma camada para a outra 
-//api.use(bodyParser.urlencoded({ extended: false }));
+api.use(bodyParser.urlencoded({ extended: false }));
 api.use(bodyParser.json());
 
 // Definição do CORS para permitir acesso externo
@@ -37,8 +37,8 @@ if (ambiente === 'development'){
 // Aqui o mapemanto das rotas da aplicação. Todos esses mapeamentos fazem parte da aplicação
 // A cada require, o js é inicializado
 api.use('/api/users', require('./controllers/api/users.controller'));
-api.use('/api/perguntas', require('./controllers/api/perguntas.controller'));
 api.use('/api/estoque', require('./controllers/api/estoque.controller'));
+
 
 // start server API
 var serverAPI = api.listen(apiPort, function () {
