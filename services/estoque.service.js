@@ -15,6 +15,7 @@ service.getById = getById;
 service.create = create;
 service.update = update;
 service.delete = _delete;
+service.getProdutoId = getProdutoId;
 
 module.exports = service;
 
@@ -29,6 +30,21 @@ function getAll() {
 
     return deferred.promise;
 }
+
+function getProdutoId(codigoItem) {
+    var deferred = Q.defer();
+    db.estoque.findOne(
+        { codigoItem },
+        function (err, user) {
+            if (err) deferred.reject(err.name + ': ' + err.message);
+
+            if (user) {
+                // username already exists
+                deferred.resolve(produtos);
+            } 
+            
+        });
+    }
 
 function authenticate(username, password) {
     var deferred = Q.defer();

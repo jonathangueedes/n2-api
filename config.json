@@ -1,4 +1,5 @@
 ﻿{
     "connectionString": "mongodb://n2:n2@ft-treino-shard-00-00-5p40t.azure.mongodb.net:27017,ft-treino-shard-00-01-5p40t.azure.mongodb.net:27017,ft-treino-shard-00-02-5p40t.azure.mongodb.net:27017/n2?ssl=true&replicaSet=ft-treino-shard-0&authSource=admin&retryWrites=true&w=majority",
     "secret": "API SECRET"
+
 }

@@ -7,6 +7,7 @@ var ProdutoService = require('services/estoque.service');
 router.get('/getAll', getProdutos);
 router.post('/register', registerProduto);
 router.get('/:_id', getCurrentProduto);
+router.get('/id/:codigoItem', getProdutoId)
 router.put('/:_id', updateProduto);
 router.delete('/:_id', deleteProduto);
 
@@ -21,6 +22,17 @@ function getProdutos(req, res) {
             res.status(400).send(err);
         });
 }
+
+function getProdutoId(req, res) {
+    ProdutoService.getProdutoId(req.params.codigoItem)
+        .then(function (Produtos) {
+            res.send(Produtos);
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
+
 
 function registerProduto(req, res) {
     ProdutoService.create(req.body)
