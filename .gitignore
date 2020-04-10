@@ -5,7 +5,6 @@ logs
 # node modules
 node_modules
 package-lock.json
-package.json
 # Runtime data
 pids
 *.pid
