@@ -101,13 +101,15 @@ function create(produtoParam) {
 
     function createProduto() {
         // set user object to produtoParam without the cleartext password
-        var user = _.omit(produtoParam, 'password');
+        var produto = _.omit(produtoParam, 'password');
+        //Margem com o dobro do valor pago
+        produto.valorMargem = produto.valorCompra * 2
+        //Preço sugerido com acrescimo de 10% sobre o valor de margem
+        produto.precoSugerido = produto.valorMargem * 1.1
 
-        // add hashed password to user object
-        //user.hash = bcrypt.hashSync(produtoParam.password, 10);
 
         db.estoque.insert(
-            user,
+            produto,
             function (err, doc) {
                 if (err) deferred.reject(err.name + ': ' + err.message);
 
@@ -140,9 +142,10 @@ function update(_id, produtoParam) {
             caracteristica:  produtoParam.caracteristica,
             tamanho:  produtoParam.tamanho,
             cor:  produtoParam.cor,
+            valorEtiqueta: produtoParam.valorEtiqueta,
             valorCompra:  produtoParam.valorCompra,
-            valorMargem:  produtoParam.valorMargem,
-            precoSugerido:  produtoParam.precoSugerido        
+            valorMargem:  produtoParam.valorCompra * 2,
+            precoSugerido:  produtoParam.valorMargem * 1.1        
         };
 
     
