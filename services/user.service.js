@@ -116,11 +116,26 @@ function update(_id, userParam) {
     });
 
     function updateUser() {
+    
+        var ultimaAtualizacao = new Date();
+
         // fields to update
         var set = {
-            firstName: userParam.firstName,
-            lastName: userParam.lastName,
+            name: userParam.name,
             username: userParam.username,
+            idade:  userParam.idade,
+            altura:  userParam.altura,
+            sexo:   userParam.sexo,
+            peso:  userParam.peso,
+            endereco:  userParam.endereco,
+            cep:  userParam.cep,
+            cidade: userParam.cidade,
+            estado:  userParam.estado,
+            objetivos : userParam.objetivos,
+            dataCadastro : ultimaAtualizacao.toLocaleDateString("pt-BR")
+            
+
+
         };
 
         // update password if it was entered

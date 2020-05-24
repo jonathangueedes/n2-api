@@ -37,7 +37,6 @@ if (ambiente === 'development'){
 // Aqui o mapemanto das rotas da aplicação. Todos esses mapeamentos fazem parte da aplicação
 // A cada require, o js é inicializado
 api.use('/api/users', require('./controllers/api/users.controller'));
-api.use('/api/estoque', require('./controllers/api/estoque.controller'));
 
 
 // start server API
