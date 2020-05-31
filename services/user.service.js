@@ -20,12 +20,12 @@ module.exports = service;
 function authenticate(username, password) {
     var deferred = Q.defer();
 
-    db.users.findOne({ username: username }, function (err, user) {
+    db.users.findOne({ username: username }, function(err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
 
         if (user && bcrypt.compareSync(password, user.hash)) {
             // authentication successful
-            deferred.resolve({token :jwt.sign({ sub: user._id }, config.secret), userId: user._id});
+            deferred.resolve({ token: jwt.sign({ sub: user._id }, config.secret), userId: user._id });
         } else {
             // authentication failed
             deferred.resolve();
@@ -38,7 +38,7 @@ function authenticate(username, password) {
 function getById(_id) {
     var deferred = Q.defer();
 
-    db.users.findById(_id, function (err, user) {
+    db.users.findById(_id, function(err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
 
         if (user) {
@@ -57,9 +57,8 @@ function create(userParam) {
     var deferred = Q.defer();
 
     // validation
-    db.users.findOne(
-        { username: userParam.username },
-        function (err, user) {
+    db.users.findOne({ username: userParam.username },
+        function(err, user) {
             if (err) deferred.reject(err.name + ': ' + err.message);
 
             if (user) {
@@ -79,7 +78,7 @@ function create(userParam) {
 
         db.users.insert(
             user,
-            function (err, doc) {
+            function(err, doc) {
                 if (err) deferred.reject(err.name + ': ' + err.message);
 
                 deferred.resolve();
@@ -93,14 +92,13 @@ function update(_id, userParam) {
     var deferred = Q.defer();
 
     // validation
-    db.users.findById(_id, function (err, user) {
+    db.users.findById(_id, function(err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
 
         if (user.username !== userParam.username) {
             // username has changed so check if the new username is already taken
-            db.users.findOne(
-                { username: userParam.username },
-                function (err, user) {
+            db.users.findOne({ username: userParam.username },
+                function(err, user) {
                     if (err) deferred.reject(err.name + ': ' + err.message);
 
                     if (user) {
@@ -116,24 +114,44 @@ function update(_id, userParam) {
     });
 
     function updateUser() {
-    
+
         var ultimaAtualizacao = new Date();
 
         // fields to update
         var set = {
             name: userParam.name,
             username: userParam.username,
-            idade:  userParam.idade,
-            altura:  userParam.altura,
-            sexo:   userParam.sexo,
-            peso:  userParam.peso,
-            endereco:  userParam.endereco,
-            cep:  userParam.cep,
+            idade: userParam.idade,
+            altura: userParam.altura,
+            sexo: userParam.sexo,
+            peso: userParam.peso,
+            endereco: userParam.endereco,
+            cep: userParam.cep,
             cidade: userParam.cidade,
-            estado:  userParam.estado,
-            objetivos : userParam.objetivos,
-            dataCadastro : ultimaAtualizacao.toLocaleDateString("pt-BR")
-            
+            estado: userParam.estado,
+            objetivo: {
+                hipertrofia: userParam.hipertrofia,
+                condicionamneto: userParam.condicionamneto,
+                saude: userParam.saude
+            },
+            dia_semana: {
+                domingo: userParam.domingo,
+                segunda: userParam.segunda,
+                terca: userParam.terca,
+                quarta: userParam.quarta,
+                quinta: userParam.quinta,
+                sexta: userParam.sexta,
+                sabado: userParam.sabado
+            },
+            periodo: {
+                manha: userParam.manha,
+                tarde: userParam.tarde,
+                noite: userParam.noite
+
+            },
+            info_complement: userParam.info_complement,
+            dataCadastro: ultimaAtualizacao.toLocaleDateString("pt-BR")
+
 
 
         };
@@ -143,10 +161,8 @@ function update(_id, userParam) {
             set.hash = bcrypt.hashSync(userParam.password, 10);
         }
 
-        db.users.update(
-            { _id: mongo.helper.toObjectID(_id) },
-            { $set: set },
-            function (err, doc) {
+        db.users.update({ _id: mongo.helper.toObjectID(_id) }, { $set: set },
+            function(err, doc) {
                 if (err) deferred.reject(err.name + ': ' + err.message);
 
                 deferred.resolve();
@@ -159,9 +175,8 @@ function update(_id, userParam) {
 function _delete(_id) {
     var deferred = Q.defer();
 
-    db.users.remove(
-        { _id: mongo.helper.toObjectID(_id) },
-        function (err) {
+    db.users.remove({ _id: mongo.helper.toObjectID(_id) },
+        function(err) {
             if (err) deferred.reject(err.name + ': ' + err.message);
 
             deferred.resolve();
