@@ -1,5 +1,5 @@
 ﻿// biblioteca js que faz o mapeamento das pastas em função do server.js
-require('rootpath')(); 
+require('rootpath')();
 // Inicialização do express. Notem que fiz aqui uma modificação do projeto original. criei duas variáveis de express
 // separando de vez api e app. Em um desenvolvimento mais sofisticado, onde você deseje fazer balanceamento de carga
 // separadamente para cada ponto da solução, você teria que criar dois server.js e quebrar de vez a aplicação
@@ -25,7 +25,7 @@ api.use(bodyParser.json());
 
 // Definição do CORS para permitir acesso externo
 // Isso tem que acontecer antes da criação das rotas
-if (ambiente === 'development'){
+if (ambiente === 'development') {
     api.use(cors());
 }
 
@@ -40,6 +40,6 @@ api.use('/api/users', require('./controllers/api/users.controller'));
 
 
 // start server API
-var serverAPI = api.listen(apiPort, function () {
+var serverAPI = api.listen(apiPort, function() {
     console.log('Server API listening at http://' + serverAPI.address().address + ':' + serverAPI.address().port);
 });

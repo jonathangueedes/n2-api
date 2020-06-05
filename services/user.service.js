@@ -1,6 +1,7 @@
 ﻿var config = require('config.json');
 var _ = require('lodash');
 var jwt = require('jsonwebtoken');
+var yup = require('yup');
 var bcrypt = require('bcryptjs');
 var Q = require('q');
 var mongo = require('mongoskin');
@@ -78,7 +79,7 @@ function create(userParam) {
 
         db.users.insert(
             user,
-            function(err, doc) {
+            function(err) {
                 if (err) deferred.reject(err.name + ': ' + err.message);
 
                 deferred.resolve();
@@ -90,6 +91,34 @@ function create(userParam) {
 
 function update(_id, userParam) {
     var deferred = Q.defer();
+
+    let schema = yup.object().shape({
+        name: yup.string().required(),
+        username: yup.string().required(),
+        idade: yup
+            .number()
+            .required()
+            .positive()
+            .integer(),
+        altura: yup
+            .number()
+            .required()
+            .positive(),
+        sexo: yup.string().required(),
+        peso: yup
+            .number()
+            .required()
+            .positive(),
+        endereco: yup.string().required(),
+        cep: yup.string().required(),
+        cidade: yup.string().required(),
+        estado: yup.string().required(),
+        //objetivo: yup.string().required(),
+        //dia_semana: yup.string().required(),
+        //periodo: yup.string().required(),
+        //info_complement: yup.string().required(),
+
+    });
 
     // validation
     db.users.findById(_id, function(err, user) {
@@ -105,17 +134,65 @@ function update(_id, userParam) {
                         // username already exists
                         deferred.reject('Username "' + req.body.username + '" is already taken')
                     } else {
-                        updateUser();
+                        schema
+                            .isValid({
+                                name: userParam.name,
+                                username: userParam.username,
+                                idade: userParam.idade,
+                                altura: userParam.altura,
+                                sexo: userParam.sexo,
+                                peso: userParam.peso,
+                                endereco: userParam.endereco,
+                                cep: userParam.cep,
+                                cidade: userParam.cidade,
+                                estado: userParam.estado,
+
+                            })
+                            .then(function(valid) {
+                                valid; // => true
+                                dadosValidados = valid
+                                if (dadosValidados) {
+                                    updateUser();
+                                } else {
+                                    //return err
+                                    deferred.reject('Dados invalidos')
+                                }
+
+                            });
                     }
                 });
         } else {
-            updateUser();
+            schema
+                .isValid({
+                    name: userParam.name,
+                    username: userParam.username,
+                    idade: userParam.idade,
+                    altura: userParam.altura,
+                    sexo: userParam.sexo,
+                    peso: userParam.peso,
+                    endereco: userParam.endereco,
+                    cep: userParam.cep,
+                    cidade: userParam.cidade,
+                    estado: userParam.estado,
+
+                })
+                .then(function(valid) {
+                    valid; // => true
+                    dadosValidados = valid
+                    if (dadosValidados) {
+                        updateUser();
+                    } else {
+                        deferred.reject('Dados invalidos')
+                    }
+                });
         }
     });
 
     function updateUser() {
 
         var ultimaAtualizacao = new Date();
+
+
 
         // fields to update
         var set = {
@@ -130,23 +207,23 @@ function update(_id, userParam) {
             cidade: userParam.cidade,
             estado: userParam.estado,
             objetivo: {
-                hipertrofia: userParam.hipertrofia,
-                condicionamneto: userParam.condicionamneto,
-                saude: userParam.saude
+                hipertrofia: userParam.objetivo.hipertrofia,
+                condicionamneto: userParam.objetivo.condicionamneto,
+                saude: userParam.objetivo.saude
             },
             dia_semana: {
-                domingo: userParam.domingo,
-                segunda: userParam.segunda,
-                terca: userParam.terca,
-                quarta: userParam.quarta,
-                quinta: userParam.quinta,
-                sexta: userParam.sexta,
-                sabado: userParam.sabado
+                domingo: userParam.dia_semana.domingo,
+                segunda: userParam.dia_semana.segunda,
+                terca: userParam.dia_semana.terca,
+                quarta: userParam.dia_semana.quarta,
+                quinta: userParam.dia_semana.quinta,
+                sexta: userParam.dia_semana.sexta,
+                sabado: userParam.dia_semana.sabado
             },
             periodo: {
-                manha: userParam.manha,
-                tarde: userParam.tarde,
-                noite: userParam.noite
+                manha: userParam.periodo.manha,
+                tarde: userParam.periodo.tarde,
+                noite: userParam.periodo.noite
 
             },
             info_complement: userParam.info_complement,
@@ -162,7 +239,7 @@ function update(_id, userParam) {
         }
 
         db.users.update({ _id: mongo.helper.toObjectID(_id) }, { $set: set },
-            function(err, doc) {
+            function(err) {
                 if (err) deferred.reject(err.name + ': ' + err.message);
 
                 deferred.resolve();
