@@ -15,7 +15,7 @@ var expressJwt = require('express-jwt');
 // carrega as configurações mapeadas no json
 var config = require('config.json');
 // agora escutando em uma porta diferente a api.
-var apiPort = process.env.PORT || 443;
+var apiPort = process.env.PORT || 9050;
 var ambiente = process.env.NODE_ENV || 'development';
 
 // separação da api
@@ -32,7 +32,7 @@ if (ambiente === 'development') {
 // Essa configuração na API indica que haverá JWT para cada endpoint / rota método, com exceção dos métodos
 // de autenticação e registro de usuários. Essa camada de segurança é muito boa, porque ajuda
 // na diminuição do tratamento de mensagens indevidas na aplicação
-//api.use('/api', expressJwt({ secret: config.secret }).unless({ path: ['/api/users/authenticate', '/api/users/register'] }));
+api.use('/api', expressJwt({ secret: config.secret }).unless({ path: ['/api/users/authenticate', '/api/users/register'] }));
 
 // Aqui o mapemanto das rotas da aplicação. Todos esses mapeamentos fazem parte da aplicação
 // A cada require, o js é inicializado
