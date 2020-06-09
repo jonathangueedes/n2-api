@@ -5,7 +5,7 @@ require('rootpath')();
 // separadamente para cada ponto da solução, você teria que criar dois server.js e quebrar de vez a aplicação
 var express = require('express');
 var api = express();
-//var cors = require('cors');
+var cors = require('cors');
 // bibloteca que ajuda no parse de mensagens requisitadas que contém JSON
 var bodyParser = require('body-parser');
 // essa biblioteca será utilizada na API para fazer autenticaçao seguindo o método JWT. 
@@ -25,9 +25,13 @@ api.use(bodyParser.json());
 
 // Definição do CORS para permitir acesso externo
 // Isso tem que acontecer antes da criação das rotas
-if (ambiente === 'development') {
-    api.use(cors());
-}
+//if (ambiente === 'development') {
+//    api.use(cors());
+//}
+
+api.use(cors())
+
+
 
 // Essa configuração na API indica que haverá JWT para cada endpoint / rota método, com exceção dos métodos
 // de autenticação e registro de usuários. Essa camada de segurança é muito boa, porque ajuda
