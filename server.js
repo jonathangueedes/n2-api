@@ -15,7 +15,7 @@ var expressJwt = require('express-jwt');
 // carrega as configurações mapeadas no json
 var config = require('config.json');
 // agora escutando em uma porta diferente a api.
-var apiPort = process.env.PORT || 9050;
+var apiPort = process.env.PORT || 443;
 var ambiente = process.env.NODE_ENV || 'development';
 
 // separação da api
@@ -25,9 +25,13 @@ api.use(bodyParser.json());
 
 // Definição do CORS para permitir acesso externo
 // Isso tem que acontecer antes da criação das rotas
-if (ambiente === 'development') {
-    api.use(cors());
-}
+//if (ambiente === 'development') {
+//    api.use(cors());
+//}
+
+api.use(cors())
+
+
 
 // Essa configuração na API indica que haverá JWT para cada endpoint / rota método, com exceção dos métodos
 // de autenticação e registro de usuários. Essa camada de segurança é muito boa, porque ajuda
