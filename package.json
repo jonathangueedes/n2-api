@@ -7,8 +7,10 @@
         "url": "https://github.com/cornflourblue/mean-stack-registration-login-example.git"
     },
     "dependencies": {
+        "axios": "^0.19.2",
         "bcryptjs": "^2.1.0",
         "body-parser": "^1.13.2",
+        "cors": "^2.4.0",
         "ejs": "^2.3.3",
         "express": "^4.13.0",
         "express-jwt": "^3.0.1",
@@ -18,10 +20,9 @@
         "mongodb": "^2.1.16",
         "mongoskin": "^2.1.0",
         "q": "^1.4.1",
-        "yup": "0.29.1",
         "request": "^2.58.0",
         "rootpath": "^0.1.2",
-        "cors": "^2.4.0"
+        "yup": "0.29.1"
     },
     "license": "MIT"
 }
