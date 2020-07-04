@@ -5,6 +5,7 @@ var yup = require('yup');
 var bcrypt = require('bcryptjs');
 var Q = require('q');
 var mongo = require('mongoskin');
+const { result } = require('lodash');
 var db = mongo.db(config.connectionString, { native_parser: true });
 db.bind('users');
 
@@ -15,6 +16,7 @@ service.getById = getById;
 service.create = create;
 service.update = update;
 service.delete = _delete;
+service.nearLocation = nearLocation
 
 module.exports = service;
 
@@ -89,24 +91,6 @@ function create(userParam) {
     return deferred.promise;
 }
 
-//import { setLocale } from 'yup';
-
-// yup.setLocale({
-//     mixed: {
-//         default: 'Não é válido',
-//     },
-//     number: {
-//         min: '${path} deve ser maior que ${min}',
-//         max: '${path} deve ser maior que ${max}',
-//         positive: '${path} deve ser positivo',
-//         integer: '${path} deve ser um número inteiro',
-//         required: '${path} é um campo obrigatório'
-//     },
-
-//     string: {
-//         required: '${path} é um campo obrigatório'
-//     }
-// });
 
 let schema = yup.object().shape({
     Name: yup.string().required(),
@@ -251,11 +235,11 @@ function update(_id, userParam) {
             },
             info_complement: userParam.info_complement,
             dataCadastro: ultimaAtualizacao.toLocaleDateString("pt-BR"),
-            latidude: userParam.latitude,
-            longitude: userParam.longitude
+            Coordenadas: {
+                latitude: userParam.latitude,
+                longitude: userParam.longitude
 
-
-
+            }
         };
 
         // update password if it was entered
@@ -285,4 +269,25 @@ function _delete(_id) {
         });
 
     return deferred.promise;
+}
+
+
+
+function nearLocation(coordenadas) {
+    var deferred = Q.defer();
+    db.users.find({
+        Coordenadas: {
+            $near: {
+                $geometry: {
+                    type: "Point",
+                    coordinates: [coordenadas.latitude, coordenadas.longitude]
+                },
+                $maxDistance: 15000
+            }
+        }
+    }).toArray(function(err, result) {
+        deferred.resolve(result);
+    });
+    return deferred.promise;
+
 }
